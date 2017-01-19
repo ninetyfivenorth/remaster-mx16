@@ -1,0 +1,4 @@
+remaster/*
+remaster-*/*
+*.iso
+log/*
