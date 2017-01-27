@@ -112,10 +112,31 @@ function replace_text_in_file {
 	fi
 }
 
-function edit_version_file {
+function edit_swiftlinux {
 	ABBREV="$1"
 	EDITION="$2"
+
+	echo '------------------------'
+	echo "Editing the $EDITION ISO"
+
 	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/version "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/grub/grub.cfg "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/grub/theme/theme.txt "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/isolinux/isolinux.cfg "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/isolinux/readme.msg "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/syslinux/readme.msg "$ABBREV"
+	replace_text_in_file 'MX' "$EDITION" $ABBREV-iso/boot/syslinux/syslinux.cfg "$ABBREV"
+
+	echo '-----------------------------'
+	echo "Editing the $EDITION squashfs"
+	
+	# Set LightDM background
+	cp $STARTPATH/usr_local_share_backgrounds_MX16_lightdm/$ABBREV.jpg $ABBREV-squashfs/usr/local/share/backgrounds/MX16/lightdm
+	replace_text_in_file 'login.jpg' "$ABBREV.jpg" $ABBREV-squashfs/etc/lightdm/lightdm-gtk-greeter.conf "$ABBREV"
+
+    # Set Xfce background
+	cp $STARTPATH/usr_local_share_backgrounds_MX16_wallpaper/$ABBREV.jpg $ABBREV-squashfs/usr/local/share/backgrounds/MX16/wallpaper
+	replace_text_in_file 'maine-sunrise.jpg' "$ABBREV.jpg" $ABBREV-squashfs/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml "$ABBREV"
 }
 
 # Set ISO path
@@ -174,7 +195,7 @@ function build {
 	echo '***************************************'
 	echo "BEGIN building $EDITION ($ABBREV) in $1"
 	echo '***************************************'
-	edit_version_file "$ABBREV" "$EDITION"
+	edit_swiftlinux "$ABBREV" "$EDITION"
 	set_iso_path "$ABBREV"
 	set_iso_name "$ABBREV"
 	make_squashfs $1 $ABBREV
@@ -197,3 +218,4 @@ STARTPATH=$PWD
 get_iso_path
 set_host_path
 build_edition 'taylor_swift' 'Taylor Swift Linux'
+chmod 777 $REM
