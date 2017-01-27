@@ -218,4 +218,6 @@ STARTPATH=$PWD
 get_iso_path
 set_host_path
 build_edition 'taylor_swift' 'Taylor Swift Linux'
+build_edition 'ingress_enlightened' 'Ingress Enlightened Swift Linux'
+build_edition 'ingress_resistance' 'Ingress Resistance Swift Linux'
 chmod 777 $REM
